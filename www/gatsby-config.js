@@ -1,3 +1,43 @@
+const secrets = require("./.secrets")
+const fs = require("fs")
+const tempy = require("tempy")
+const jsYaml = require(`js-yaml`)
+
+const tmpFile = tempy.file({ extension: "js" })
+let tmpGithubQuery = `module.exports = [`
+
+try {
+  var startersYaml = jsYaml.safeLoad(
+    fs.readFileSync("../docs/starters.yml", "utf8")
+  )
+  for (var starter in startersYaml) {
+    let [owner, repo] = startersYaml[starter].repo.split("/").slice(-2)
+    tmpGithubQuery = tmpGithubQuery.concat(`
+  \`{
+    repository(owner: "${owner}", name: "${repo}") {
+    name
+    owner {
+      login
+    }
+    stargazers {
+      totalCount
+    }
+    updatedAt
+    shortDescriptionHTML
+    descriptionHTML
+    description
+    }
+  }\`,`)
+  }
+} catch (e) {
+  console.log(`There was an error reading starters.yml`, e)
+}
+
+tmpGithubQuery = tmpGithubQuery.concat(`\n]`)
+fs.writeFileSync(tmpFile, tmpGithubQuery, "utf8")
+
+const startersGithubQuery = require(tmpFile)
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby`,
@@ -29,10 +69,19 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-source-github`,
+      options: {
+        headers: {
+          Authorization: `Bearer ${secrets.githubToken}`,
+        },
+        queries: startersGithubQuery,
+      },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `StarterShowcaseImages`,
-        path: `${__dirname}/src/data/StarterShowcase/generatedScreenshots`,
+        path: `${__dirname}/src/data/starter-showcase/screenshots`,
       },
     },
     //   need to have the img processing first? https://github.com/gatsbyjs/gatsby/issues/5196
@@ -40,7 +89,7 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `StarterShowcaseData`,
-        path: `${__dirname}/src/data/StarterShowcase/startersData`,
+        path: `${__dirname}/src/data/starter-showcase/starters`,
       },
     },
     {

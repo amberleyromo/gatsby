@@ -10,9 +10,9 @@ var getpkgjson = require(`get-package-json-from-github`)
 // unauthenticated client
 const gh = new GitHub()
 
-var srcFolder = `./startersData`
-var desFolder = `./generatedScreenshots`
-var gitFolder = `./generatedGithubData`
+var srcFolder = `./starters`
+var desFolder = `./screenshots`
+var gitFolder = `./github-metadata`
 
 // Loop through all the files in the temp directory
 fs.readdir(srcFolder, function(err, files) {

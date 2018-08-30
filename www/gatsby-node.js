@@ -244,6 +244,7 @@ exports.createPages = ({ graphql, actions }) => {
         })
       })
 
+      // Create site showcase pages
       result.data.allSitesYaml.edges.forEach(edge => {
         if (!edge.node.fields) return
         if (!edge.node.fields.slug) return
@@ -383,14 +384,14 @@ exports.onPostBuild = () => {
 
 // Starter Showcase related code
 const { createFilePath } = require(`gatsby-source-filesystem`)
-const gitFolder = `./src/data/StarterShowcase/generatedGithubData`
+const gitFolder = `./src/data/starter-showcase/github-metadata`
 function createNodesForStarterShowcase({ node, getNode, getNodes, actions }) {
   const { createNodeField, createParentChildLink } = actions
   if (node.internal.type === `MarkdownRemark`) {
     const slug = createFilePath({
       node,
       getNode,
-      basePath: `startersData`,
+      basePath: `starters`,
     })
     // preprocessing
     const stub = slug.replace(/\//gi, ``)

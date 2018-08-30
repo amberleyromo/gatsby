@@ -31,3 +31,5 @@ node_modules
 /yarn.lock
 src/cache
 /package-lock.json
+
+.secrets.js

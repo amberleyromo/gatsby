@@ -1,22 +1,22 @@
 import React, { Component } from "react"
 import { graphql } from "gatsby"
 
-import ShowcaseView from "../views/starter-showcase"
+import StarterShowcaseView from "../views/starter-showcase"
 
-class ShowcasePage extends Component {
+class StarterShowcasePage extends Component {
   render() {
     const data = this.props.data
     const location = this.props.location
 
-    return <ShowcaseView data={data} location={location} />
+    return <StarterShowcaseView data={data} location={location} />
   }
 }
 
-export default ShowcasePage
+export default StarterShowcasePage
 
-export const showcaseQuery = graphql`
+export const starterShowcaseQuery = graphql`
   query SiteShowcaseQuery {
-    allFile(filter: { absolutePath: { regex: "/generatedScreenshots/" } }) {
+    allFile(filter: { absolutePath: { regex: "/screenshots/" } }) {
       edges {
         node {
           name
@@ -31,7 +31,7 @@ export const showcaseQuery = graphql`
     allMarkdownRemark(
       sort: { order: DESC, fields: [frontmatter___date] }
       limit: 1000
-      filter: { fileAbsolutePath: { regex: "/startersData/", ne: null } }
+      filter: { fileAbsolutePath: { regex: "/starters/", ne: null } }
     ) {
       edges {
         node {
